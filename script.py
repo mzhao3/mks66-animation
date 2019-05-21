@@ -22,7 +22,16 @@ def first_pass( commands ):
 
     name = ''
     num_frames = 1
+    for command in commands:
+        if (command['op'] == 'frames'):
+            num_frames = int(command['args'][0])
+        if (command['op'] == 'basename'):
+            name = command['args'][0]
 
+    if (name == ''):
+        name = default
+    if (num_frames == 1):
+        return
     return (name, num_frames)
 
 """======== second_pass( commands ) ==========
@@ -44,6 +53,20 @@ def first_pass( commands ):
   ===================="""
 def second_pass( commands, num_frames ):
     frames = [ {} for i in range(num_frames) ]
+    cmds = []
+    for command in commands:
+        if (command['op'] == 'vary'):
+            cmds.append(command)
+    #print(cmds)
+
+    for cmd in cmds:
+        start_r = cmd['args'][2]
+        end_r = cmd['args'][3]
+        start_f = cmd['args'][0]
+        end_f = cmd['args'][1]
+        vary = (end_r - start_r) / (end_f - start_f)
+
+
 
     return frames
 
@@ -79,7 +102,7 @@ def run(filename):
                           'green': [0.2, 0.5, 0.5],
                           'blue': [0.2, 0.5, 0.5]}]
     reflect = '.white'
-
+    #print(commands)
     (name, num_frames) = first_pass(commands)
     frames = second_pass(commands, num_frames)
 
