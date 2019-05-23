@@ -29,7 +29,7 @@ def first_pass( commands ):
             name = command['args'][0]
 
     if (name == ''):
-        name = default
+        name = "default"
     if (num_frames == 1):
         return
     return (name, num_frames)
@@ -57,15 +57,24 @@ def second_pass( commands, num_frames ):
     for command in commands:
         if (command['op'] == 'vary'):
             cmds.append(command)
-    #print(cmds)
+    # print(cmds)
+    # for cmd in cmds:
+    #     print  (cmd['args'][0])
+    #     print  (cmd['knob'])
 
+    # need to check calculations
     for cmd in cmds:
         start_r = cmd['args'][2]
         end_r = cmd['args'][3]
         start_f = cmd['args'][0]
         end_f = cmd['args'][1]
-        vary = (end_r - start_r) / (end_f - start_f)
+        range_f = int(end_f - start_f)
+        vary = (end_r - start_r) / (range_f)
 
+        for i in range(range_f):
+            frames[int(start_f+i)][cmd['knob']] = 0 + i * vary
+
+    #print(frames)
 
 
     return frames
